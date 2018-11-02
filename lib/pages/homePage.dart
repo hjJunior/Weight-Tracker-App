@@ -31,7 +31,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Weiget Tracker'),
+        title: Text('Weight Tracker'),
         centerTitle: true,
       ),
       body: ListView.builder(
