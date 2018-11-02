@@ -1,7 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'dart:math';
 import 'package:weight_tracker/models/weightSave.dart';
 import 'package:weight_tracker/components/weightListItem.dart';
+import 'package:weight_tracker/pages/addEntryDialog.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -11,10 +13,18 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   List<WeightSave> _weightSaves = [];
 
-  void _addWeight () {
-    setState(() {
-      _weightSaves.add(WeightSave(new DateTime.now(), new Random().nextInt(100).toDouble()));
-    });
+  Future _addWeight () async {
+    WeightSave newEntry = await Navigator.of(context).push(new MaterialPageRoute<WeightSave>(
+        builder: (BuildContext context) {
+          return AddEntryDialog();
+        },
+        fullscreenDialog: true
+    ));
+    if (newEntry != null) {
+      setState(() {
+        _weightSaves.add(newEntry);
+      });
+    }
   }
   
   @override
