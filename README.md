@@ -1,4 +1,5 @@
 # weight_tracker
+[![Coverage Status](https://coveralls.io/repos/github/hjJunior/Quiz-app-in-flutter/badge.svg?branch=master)](https://coveralls.io/github/hjJunior/Quiz-app-in-flutter?branch=master)
 
 A new Flutter project.
 
