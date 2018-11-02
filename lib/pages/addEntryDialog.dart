@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:weight_tracker/models/weightSave.dart';
+import 'package:weight_tracker/components/dateTimeItem.dart';
+import 'package:numberpicker/numberpicker.dart';
 import 'dart:math';
 
 class AddEntryDialog extends StatefulWidget {
@@ -8,9 +10,35 @@ class AddEntryDialog extends StatefulWidget {
 }
 
 class AddEntryDialogState extends State<AddEntryDialog> {
+  TextEditingController _textEditingController = TextEditingController();
+  double _weight = 1.0;
+  DateTime _dateTime = new DateTime.now();
+  String _note;
 
   void _saveButtonClk () {
-    Navigator.of(context).pop(new WeightSave(new DateTime.now(), new Random().nextInt(100).toDouble()));
+    Navigator.of(context).pop(WeightSave(_dateTime, _weight, _note));
+  }
+
+  void _showWeightPicker(BuildContext context) {
+    showDialog(
+      context: context,
+      child: NumberPickerDialog.decimal(
+        minValue: 1,
+        maxValue: 150,
+        initialDoubleValue: _weight,
+        title: new Text("Enter your weight"),
+      )
+    ).then((value) {
+      if (value != null) {
+        setState(() => _weight = value);
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    _textEditingController = new TextEditingController(text: _note);
+    super.initState();
   }
 
   @override
@@ -20,10 +48,36 @@ class AddEntryDialogState extends State<AddEntryDialog> {
       actions: [
         new FlatButton(
             onPressed: _saveButtonClk,
-            child: new Text('Save',
-                style: Theme.of(context).textTheme.subhead.copyWith(color: Colors.white))),
+            child: new Text('Save', style: Theme.of(context).textTheme.subhead.copyWith(color: Colors.white))),
       ],
     ),
-    body: new Text("Foo"),
+    body: Column(
+      children: <Widget>[
+        new ListTile(
+          leading: new Icon(Icons.today, color: Colors.grey[500]),
+          title: new DateTimeItem(
+            dateTime: _dateTime,
+            onChanged: (dateTime) => setState(() => _dateTime = dateTime),
+          ),
+        ),
+        new ListTile(
+          leading: Icon(Icons.airplay),
+          title: new Text(
+            "$_weight kg",
+          ),
+          onTap: () => _showWeightPicker(context),
+        ),
+        new ListTile(
+          leading: new Icon(Icons.speaker_notes, color: Colors.grey[500]),
+          title: new TextField(
+            decoration: new InputDecoration(
+              hintText: 'Optional note',
+            ),
+            controller: _textEditingController,
+            onChanged: (value) => _note = value,
+          ),
+        ),
+      ],
+    ),
   );
 }
